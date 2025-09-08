@@ -46,12 +46,14 @@ def criar_pedido():
         for produto in estoque:
             if produto[0] == nome_pedido and produto[2] >= qtd_pedido:
                 pedido.append([nome_pedido, qtd_pedido, datetime.datetime.now()])
+                produto[2] = produto[2] - qtd_pedido #atualização do estoque
             elif produto[0] == nome_pedido and produto[2] < qtd_pedido:
                 while qtd_pedido > produto[2]:
                     print("Quantidade indisponível")
                     print ("Produto:", produto[0],"Quantidade disponível:" , produto[2])
                     qtd_pedido = int(input("Qual a quantidade desejada? "))
                 pedido.append([nome_pedido, qtd_pedido, datetime.datetime.now()])
+                produto[2] = produto[2] - qtd_pedido #atualização do estoque
             else:
                 continue
         continua = input("Deseja continuar o pedido? (S/N) ")
