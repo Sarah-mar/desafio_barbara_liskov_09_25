@@ -6,8 +6,6 @@ while resposta.upper() == "S": #a função .upper() transforma a variável respo
     qtd = int(input("Digite a quantidade do produto em estoque: "))
     resposta = input("Deseja cadastrar um novo produto? (S/N)")
 
-def cadastrar_produto_estoque(nome, preco,qtd):
+def cadastrar_produto_estoque(nome, preco,qtd): #aqui, "nome", "preco" e "qtd" são parâmetros, ou seja, podem receber qualquer valor quando a função é chamada e não são necessariamente as variáveis do laço while acima
     print("Produto Cadastrado.")  
 
-#utilizamos a variável de controle resposta para que o processo de cadastro de produtos seja continuamente controlado pela usuária.
-#poderíamos adicionar, nesse código, outras validações, como uma condicional para o caso de a resposta ser diferente de S ou N, a entrada em qtd ser diferente de um número inteiro
