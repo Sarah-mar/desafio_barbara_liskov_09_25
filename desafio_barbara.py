@@ -33,8 +33,25 @@ def confere_produto_no_estoque(nome):
 
 def criar_pedido():
     exibir_estoque()
-    pedido = input("Qual produto deseja comprar? ")
-    confere_produto_no_estoque(pedido) # a função confere_produto_no_estoque procurará, entre os nomes dos produtos no estoque, o nome fornecido no pedido
+    pedido = []
+    nome_pedido = input("Qual produto deseja comprar? ")
+    estado_no_estoque = confere_produto_no_estoque(nome_pedido) # a função confere_produto_no_estoque procurará, entre os nomes dos produtos no estoque, o nome fornecido no pedido
+    while estado_no_estoque != 1:
+        print ("Produto indisponível")
+        nome_pedido = input("Qual produto deseja comprar? ")
+        estado_no_estoque = confere_produto_no_estoque(nome_pedido)
+    qtd_pedido = int(input("Qual a quantidade desejada? "))
+    for produto in estoque:
+        if produto[0] == nome_pedido and produto[2] >= qtd_pedido:
+            produto.append(list(nome_pedido, qtd_pedido))
+        elif produto[0] == nome_pedido and produto[2] < qtd_pedido:
+            while qtd_pedido > produto[2]:
+                print("Quantidade indisponível")
+                print ("Produto:", produto[0],"Quantidade disponível:" , produto[2])
+                qtd_pedido = int(input("Qual a quantidade desejada? "))
+        else:
+            continue
+    pedido.append([nome_pedido, qtd_pedido])
 
 resposta = input("Deseja cadastrar um novo produto? (S/N) ")
 while resposta.upper() == "S": 
@@ -45,3 +62,4 @@ while resposta.upper() == "S":
     resposta = input("Deseja cadastrar um novo produto? (S/N) ") 
 
 
+criar_pedido()
