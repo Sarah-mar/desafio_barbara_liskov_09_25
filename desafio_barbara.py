@@ -10,6 +10,7 @@ def cadastrar_produto_estoque(nome, preco,qtd):
     print("Produto Cadastrado.")  
 
 def exibir_estoque():
+
     if len(estoque) != 0:
         print("Estoque:")
         for produto in estoque: #Estamos percorrendo o estoque elemento por elemento (nesse caso, os elementos são os objetos produto, que tem o tipo lista)
@@ -17,6 +18,10 @@ def exibir_estoque():
             print(f"Nome: {produto[0]} \nPreço: {produto[1]} \nQuantidade: {produto[2]} \nData: {produto[3]}")
     else:
         print ("Estoque vazio")
+
+def criar_pedido():
+    exibir_estoque()
+    pedido = input("Qual produto deseja comprar? ")
 
 resposta = input("Deseja cadastrar um novo produto? (S/N) ")
 while resposta.upper() == "S": 
