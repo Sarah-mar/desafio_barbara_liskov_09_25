@@ -19,9 +19,22 @@ def exibir_estoque():
     else:
         print ("Estoque vazio")
 
+def confere_produto_no_estoque(nome):
+    for produto in estoque:
+        if produto[0] == nome and produto[2] != 0: #produto existe no estoque e tem unidades disponíveis
+            existe = 1
+            break #precisamos do break nessa solução pois, na ausência dele, o laço for continuaria percorrendo o estoque e encontraria produtos diferentes do nome fornecido. Nesse caso, a função sempre retorna 0
+        elif produto[0] == nome and produto[2] == 0: #produto existe no estoque mas não tem unidades disponíveis
+            existe = 0
+            break
+        else: #o produto não existe no estoque
+            existe = -1
+    return existe
+
 def criar_pedido():
     exibir_estoque()
     pedido = input("Qual produto deseja comprar? ")
+    confere_produto_no_estoque(pedido) # a função confere_produto_no_estoque procurará, entre os nomes dos produtos no estoque, o nome fornecido no pedido
 
 resposta = input("Deseja cadastrar um novo produto? (S/N) ")
 while resposta.upper() == "S": 
