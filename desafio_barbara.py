@@ -60,14 +60,13 @@ def criar_pedido():
     for produto in pedido:
         print(produto[0], "-------", produto[1], "-------" ,produto[2])
     atualizar_estoque(pedido)
+    return pedido
 
 def atualizar_estoque(pedido):
-    print("Estoque anterior:", estoque)
     for produto in pedido:
         for item in estoque:
             if item[0] == produto[0]:
                 item[2] = item[2] - produto[1]
-    print("Estoque atualizado:",estoque)
 
 
 resposta = input("Deseja cadastrar um novo produto? (S/N) ")
