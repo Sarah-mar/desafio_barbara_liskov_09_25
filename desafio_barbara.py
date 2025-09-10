@@ -1,37 +1,15 @@
 import datetime 
 
-# estoque = []
-
-import random
-
-def data_aleatoria_str():
-    ano = random.randint(2020, 2025)
-    mes = random.randint(1, 12)
-    dia = random.randint(1, 28)
-    hora = random.randint(0, 23)
-    minuto = random.randint(0, 59)
-    segundo = random.randint(0, 59)
-    microsegundo = random.randint(0, 9999)  # 4 dígitos como no seu exemplo
-    return f"{ano:04d}-{mes:02d}-{dia:02d} {hora:02d}:{minuto:02d}:{segundo:02d}:{microsegundo:04d}"
-
-# Lista de estoque com datas aleatórias em string
-estoque = [
-    ["Caneta", 12.0, 2, data_aleatoria_str()],
-    ["Caderno", 15.5, 5, data_aleatoria_str()],
-    ["Lápis", 1.2, 200, data_aleatoria_str()],
-    ["Borracha", 0.8, 150, data_aleatoria_str()],
-    ["Marcador", 3.0, 75, data_aleatoria_str()]
-]
+estoque = []
 
 def cadastrar_produto_estoque(nome, preco,qtd):
     data = datetime.datetime.now() 
-    produto = (nome, preco, qtd, data)
+    produto = [nome, preco, qtd, data]
     print(f"Nome: {nome} \nPreço: {preco} \nQuantidade: {qtd} \nData: {data}")
     estoque.append(produto)
     print("Produto Cadastrado.")  
 
 def exibir_estoque():
-
     if len(estoque) != 0:
         print("Estoque:")
         for produto in estoque: #Estamos percorrendo o estoque elemento por elemento (nesse caso, os elementos são os objetos produto, que tem o tipo lista)
@@ -41,45 +19,49 @@ def exibir_estoque():
         print ("Estoque vazio")
 
 def confere_produto_no_estoque(nome):
-    for produto in estoque:
-        if produto[0] == nome and produto[2] != 0: #produto existe no estoque e tem unidades disponíveis
-            existe = 1
-            break #precisamos do break nessa solução pois, na ausência dele, o laço for continuaria percorrendo o estoque e encontraria produtos diferentes do nome fornecido. Nesse caso, a função sempre retorna 0
-        elif produto[0] == nome and produto[2] == 0: #produto existe no estoque mas não tem unidades disponíveis
-            existe = 0
-            break
-        else: #o produto não existe no estoque
-            existe = -1
+    if len(estoque) == 0: #fazemos essa validação para caso o estoque esteja vazio
+        existe = -1 
+    else:
+        for produto in estoque:
+            if produto[0] == nome and produto[2] != 0:
+                existe = 1
+                break 
+            elif produto[0] == nome and produto[2] == 0: 
+                existe = 0
+                break
+            else: 
+                existe = -1
     return existe
 
 def criar_pedido():
-    continua = "S"
     pedido = []
+    continua = "S"
     while continua.upper() == "S":
         exibir_estoque()
         nome_pedido = input("Qual produto deseja comprar? ")
-        estado_no_estoque = confere_produto_no_estoque(nome_pedido) # a função confere_produto_no_estoque procurará, entre os nomes dos produtos no estoque, o nome fornecido no pedido
-        while estado_no_estoque != 1:
-            print ("Produto indisponível")
-            nome_pedido = input("Qual produto deseja comprar? ")
-            estado_no_estoque = confere_produto_no_estoque(nome_pedido)
-        qtd_pedido = int(input("Qual a quantidade desejada? "))
-        for produto in estoque:
-            if produto[0] == nome_pedido and produto[2] >= qtd_pedido:
-                pedido.append([nome_pedido, qtd_pedido, datetime.datetime.now()])
-            elif produto[0] == nome_pedido and produto[2] < qtd_pedido:
-                while qtd_pedido > produto[2]:
-                    print("Quantidade indisponível")
-                    print ("Produto:", produto[0],"Quantidade disponível:" , produto[2])
-                    qtd_pedido = int(input("Qual a quantidade desejada? "))
-                pedido.append([nome_pedido, qtd_pedido, datetime.datetime.now()])
-            else:
-                continue
-        continua = input("Deseja continuar o pedido? (S/N) ")
-    print("Pedido encerrado. Confira abaixo seu pedido: ")
-    for produto in pedido:
-        print(produto[0], "-------", produto[1], "-------" ,produto[2])
-    atualizar_estoque(pedido)
+        estado_no_estoque = confere_produto_no_estoque(nome_pedido) 
+        if estado_no_estoque != 1:
+           print ("Produto indisponível")
+           continua = input("Deseja continuar o pedido? (S/N) ")
+        else: 
+            qtd_pedido = int(input("Qual a quantidade desejada? "))
+            for produto in estoque:
+                if produto[0] == nome_pedido and produto[2] >= qtd_pedido:
+                    pedido.append([nome_pedido, qtd_pedido, datetime.datetime.now()])
+                elif produto[0] == nome_pedido and produto[2] < qtd_pedido:
+                    while qtd_pedido > produto[2]:
+                        print("Quantidade indisponível")
+                        print ("Produto:", produto[0],"Quantidade disponível:" , produto[2])
+                        qtd_pedido = int(input("Qual a quantidade desejada? "))
+                    pedido.append([nome_pedido, qtd_pedido, datetime.datetime.now()])
+                else:
+                    continue
+            continua = input("Deseja continuar o pedido? (S/N) ")
+            atualizar_estoque(pedido) 
+    if len(pedido) != 0:
+        print("Pedido encerrado. Confira abaixo seu pedido: ")
+        for produto in pedido:
+            print(produto[0], "-------", produto[1], "-------" ,produto[2])  
     return pedido
 
 def atualizar_estoque(pedido):
@@ -106,41 +88,58 @@ def pagamento(pedido):
         print("Compra encerrada. Agradecemos a preferência!")
     return total, forma_de_pagamento, troco
 
-resposta = input("Deseja cadastrar um novo produto? (S/N) ")
-while resposta.upper() == "S": 
-    nome = input("Digite o nome do produto: ")
-    preco = float(input("Digite o preço do produto: "))
-    qtd = int(input("Digite a quantidade do produto em estoque: "))
-    cadastrar_produto_estoque(nome,preco,qtd) 
-    resposta = input("Deseja cadastrar um novo produto? (S/N) ") 
+def exibir_pedidos_registrados():
+    print("Pedidos registrados:")
+    for item in pedidos_registrados.keys():
+        print(item)
+        for campo in pedidos_registrados[item].keys():
+            print(campo, ":", pedidos_registrados[item][campo])
 
 
-#para transformar os retornos das funções criar_pedido() e pagamento(pedido) em itens de um dicionário, atribuiremos variáveis a cada uma:
+
 pedido_a_registrar ={
-}
+    }
 pedidos_registrados = {
-}
+    }
 contador_pedidos = 1
 
-infos_pedido = criar_pedido()
-print(infos_pedido)
+repete = True
+while repete:
+    processo = int(input("Olá! Qual ação deseja realizar? \n 1 - Ver o estoque \n 2 - Criar o pedido \n 3 - Adicionar itens no estoque \n 4 - Mostrar todos os pedidos \n 5 - Sair "))
+    if processo == 1:
+        exibir_estoque()
+    elif processo == 2:
+        infos_pedido = criar_pedido()
+        if len(infos_pedido) == 0:
+            print("Pedido não registrado.")
+        else:
+            total, forma_de_pagamento, troco  = pagamento(infos_pedido)
+            itens = []
+            if forma_de_pagamento == 1:
+                forma_de_pagamento = "cartão"
+            else:
+                forma_de_pagamento = "dinheiro"
+            for produto in infos_pedido:
+                itens.append([produto[0], produto[1]])
+                data = [produto[2]]
+            pedido_a_registrar = {"Itens": itens,
+                            "Data": data,
+                            "Total" : total, 
+                            "Forma de pagamento" : forma_de_pagamento,
+                            "Troco" : troco}
+            pedidos_registrados[contador_pedidos] = pedido_a_registrar
+            contador_pedidos += 1
+    elif processo == 3:
+        resposta = input("Deseja cadastrar um novo produto? (S/N) ")
+        while resposta.upper() == "S": 
+            nome = input("Digite o nome do produto: ")
+            preco = float(input("Digite o preço do produto: "))
+            qtd = int(input("Digite a quantidade do produto em estoque: "))
+            cadastrar_produto_estoque(nome,preco,qtd) 
+            resposta = input("Deseja cadastrar um novo produto? (S/N) ") 
+    elif processo == 4:
+        exibir_pedidos_registrados()
+    else:
+        print("Atendimento encerrado.")
+        repete =  False
 
-total, forma_de_pagamento, troco  = pagamento(infos_pedido)
-itens = []
-if forma_de_pagamento == 1:
-    forma_de_pagamento = "cartão"
-else:
-    forma_de_pagamento = "dinheiro"
-
-for produto in infos_pedido:
-    itens.append([produto[0], produto[1]])
-    data = [produto[2]]
-pedido_a_registrar = {"Itens": itens,
-                   "Data": data,
-                   "Total" : total, 
-                   "Forma de pagamento" : forma_de_pagamento,
-                   "Troco" : troco}
-pedidos_registrados = {contador_pedidos : pedido_a_registrar}
-
-def exibir_pedidos_registrados():
-    print(pedidos_registrados)
