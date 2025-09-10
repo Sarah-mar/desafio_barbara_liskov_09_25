@@ -33,7 +33,7 @@ def confere_produto_no_estoque(nome):
                 existe = -1
     return existe
 
-def criar_pedido():
+def criar_pedido(): #atualizamos a função criar_pedido() para o caso em que o estoque está vazio, para que a função não caia em um loop infinito.
     pedido = []
     continua = "S"
     while continua.upper() == "S":
