@@ -114,4 +114,33 @@ while resposta.upper() == "S":
     cadastrar_produto_estoque(nome,preco,qtd) 
     resposta = input("Deseja cadastrar um novo produto? (S/N) ") 
 
-pagamento(criar_pedido())
+
+#para transformar os retornos das funções criar_pedido() e pagamento(pedido) em itens de um dicionário, atribuiremos variáveis a cada uma:
+pedido_a_registrar ={
+}
+pedidos_registrados = {
+}
+contador_pedidos = 1
+
+infos_pedido = criar_pedido()
+print(infos_pedido)
+
+total, forma_de_pagamento, troco  = pagamento(infos_pedido)
+itens = []
+if forma_de_pagamento == 1:
+    forma_de_pagamento = "cartão"
+else:
+    forma_de_pagamento = "dinheiro"
+
+for produto in infos_pedido:
+    itens.append([produto[0], produto[1]])
+    data = [produto[2]]
+pedido_a_registrar = {"Itens": itens,
+                   "Data": data,
+                   "Total" : total, 
+                   "Forma de pagamento" : forma_de_pagamento,
+                   "Troco" : troco}
+pedidos_registrados = {contador_pedidos : pedido_a_registrar}
+
+def exibir_pedidos_registrados():
+    print(pedidos_registrados)
