@@ -60,6 +60,7 @@ def criar_pedido():
     for produto in pedido:
         print(produto[0], "-------", produto[1], "-------" ,produto[2])
     atualizar_estoque(pedido)
+    return pedido
 
 def atualizar_estoque(pedido):
     print("Estoque anterior:", estoque)
