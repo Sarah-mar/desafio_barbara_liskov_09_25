@@ -1,3 +1,4 @@
+
 import datetime 
 
 estoque = []
@@ -46,20 +47,28 @@ def criar_pedido():
         for produto in estoque:
             if produto[0] == nome_pedido and produto[2] >= qtd_pedido:
                 pedido.append([nome_pedido, qtd_pedido, datetime.datetime.now()])
-                produto[2] = produto[2] - qtd_pedido #atualização do estoque
             elif produto[0] == nome_pedido and produto[2] < qtd_pedido:
                 while qtd_pedido > produto[2]:
                     print("Quantidade indisponível")
                     print ("Produto:", produto[0],"Quantidade disponível:" , produto[2])
                     qtd_pedido = int(input("Qual a quantidade desejada? "))
                 pedido.append([nome_pedido, qtd_pedido, datetime.datetime.now()])
-                produto[2] = produto[2] - qtd_pedido #atualização do estoque
             else:
                 continue
         continua = input("Deseja continuar o pedido? (S/N) ")
     print("Pedido encerrado. Confira abaixo seu pedido: ")
     for produto in pedido:
         print(produto[0], "-------", produto[1], "-------" ,produto[2])
+    atualizar_estoque(pedido)
+
+def atualizar_estoque(pedido):
+    print("Estoque anterior:", estoque)
+    for produto in pedido:
+        for item in estoque:
+            if item[0] == produto[0]:
+                item[2] = item[2] - produto[1]
+    print("Estoque atualizado:",estoque)
+
 
 resposta = input("Deseja cadastrar um novo produto? (S/N) ")
 while resposta.upper() == "S": 
@@ -68,6 +77,3 @@ while resposta.upper() == "S":
     qtd = int(input("Digite a quantidade do produto em estoque: "))
     cadastrar_produto_estoque(nome,preco,qtd) 
     resposta = input("Deseja cadastrar um novo produto? (S/N) ") 
-
-
-criar_pedido()
