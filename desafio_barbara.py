@@ -80,15 +80,31 @@ def criar_pedido():
     for produto in pedido:
         print(produto[0], "-------", produto[1], "-------" ,produto[2])
     atualizar_estoque(pedido)
+    return pedido
 
 def atualizar_estoque(pedido):
-    print("Estoque anterior:", estoque)
     for produto in pedido:
         for item in estoque:
             if item[0] == produto[0]:
                 item[2] = item[2] - produto[1]
-    print("Estoque atualizado:",estoque)
 
+def pagamento(pedido):
+    total = 0
+    for produto in pedido:
+        for item in estoque:
+            if produto[0] == item[0]:
+                total += produto[1] * item[1]
+    print("Total:", total)
+    forma_de_pagamento = int(input("Qual será a forma de pagamento? (1-cartão, 2-dinheiro) "))
+    if forma_de_pagamento ==  1:
+        troco = 0
+        print("Compra encerrada. Agradecemos a preferência!")
+    elif forma_de_pagamento == 2:
+        valor_recebido = float(input("Digite o valor pago em dinheiro: "))
+        troco = valor_recebido - total
+        print("Troco:", troco)
+        print("Compra encerrada. Agradecemos a preferência!")
+    return total, forma_de_pagamento, troco
 
 resposta = input("Deseja cadastrar um novo produto? (S/N) ")
 while resposta.upper() == "S": 
@@ -98,3 +114,4 @@ while resposta.upper() == "S":
     cadastrar_produto_estoque(nome,preco,qtd) 
     resposta = input("Deseja cadastrar um novo produto? (S/N) ") 
 
+pagamento(criar_pedido())
